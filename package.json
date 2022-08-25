@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "framer-motion": "^7.2.1",
-    "gsap": "^3.11.0",
+    "gsap": "./src/vendor/gsap-bonus.tgz",
     "swup": "^2.0.19"
   }
 }

@@ -1,14 +1,9 @@
 import { useEffect } from "react";
-import {
-  animateHomePageIn,
-  animateHomePageOut
-} from "../../utils/motion/home";
-import {
-  animateTestPageIn,
-  animateTestPageOut
-} from "../../utils/motion/test";
+import { animateHomePageIn, animateHomePageOut } from '@/utils/motion/home';
+import { animateTestPageIn, animateTestPageOut } from '@/utils/motion/test';
 
-const EventEmitterClient = () => {
+// https://stackoverflow.com/questions/73448278/have-i-lost-my-mind-or-are-these-functional-components-using-invalid-hook-calls
+export default function EventEmitterClient() {
   useEffect(() => {
     window.ee.on('transition-out', ({ next, from, to }) => {
       if (from === '/') {
@@ -29,5 +24,3 @@ const EventEmitterClient = () => {
 
   return null;
 };
-
-export default EventEmitterClient;

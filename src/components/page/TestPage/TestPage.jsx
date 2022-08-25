@@ -7,6 +7,7 @@ const TestPage = () => {
       <p className="Test__description">
         This is the test page
       </p>
+      <div className="Test__image" />
       <Navigation />
     </div>
   );

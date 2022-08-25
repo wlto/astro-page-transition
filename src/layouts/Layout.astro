@@ -1,5 +1,7 @@
 ---
 import EventEmitterClient from '@/components/controllers/EventEmitterClient/EventEmitterClient';
+import Image from '@/components/ui/Image/Image';
+import Gsap from '@/components/controllers/Gsap/Gsap';
 
 export interface Props {
 	title: string;
@@ -22,6 +24,8 @@ const { title } = Astro.props as Props;
 			<slot />
 		</main>
 
+		<Image client:idle src="/images/image3.png" className="Main__image" />
+		<Gsap client:idle />
 		<EventEmitterClient client:idle />
 
 		<script src="https://unpkg.com/eventemitter3@4.0.7/umd/eventemitter3.min.js"></script>
@@ -81,5 +85,15 @@ const { title } = Astro.props as Props;
 	:global(code) {
 		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
 			Bitstream Vera Sans Mono, Courier New, monospace;
+	}
+
+	.Main__image {
+		position: absolute;
+		top: 30px;
+		left: 30px;
+		width: 400px;
+		height: 400px;
+		border-radius: 10px;
+		overflow: hidden;
 	}
 </style>

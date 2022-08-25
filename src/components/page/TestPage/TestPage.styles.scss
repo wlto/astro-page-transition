@@ -7,4 +7,9 @@
   &__description {
     @include ls-regular(40);
   }
+
+  &__image {
+    width: 400px;
+    height: 250px;
+  }
 }
