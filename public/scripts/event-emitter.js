@@ -1,0 +1,1 @@
+window.ee = new EventEmitter3();

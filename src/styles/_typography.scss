@@ -1,0 +1,36 @@
+@import 'fonts';
+/*
+ * *************************************************************************************
+ * Typography Mixins and stylings
+ * *************************************************************************************
+ */
+
+/*
+ * @mixin font-props
+ * This mixin requires three arguments: size, letter-spacing, and line-height.
+ * Each argument is a unitless number.
+ */
+@mixin font-props($size, $letter-spacing, $line-height) {
+  font-size: font-rem($size);
+  letter-spacing: #{$letter-spacing}em;
+  line-height: #{$line-height}em;
+}
+
+
+/*
+ * *************************************************************************************
+ * Project fonts mixins
+ * *************************************************************************************
+ */
+$ls : 'LeagueSpartan', Helvetica, Arial, sans-serif;
+
+/*
+ * ****************************
+ * LeagueSpartan
+ */
+@mixin ls-regular($size : 10, $letter-spacing : 0, $line-height: 1) {
+  @include font-props($size, $letter-spacing, $line-height);
+  font-family: $ls;
+  font-weight: 400;
+  font-style: normal;
+}

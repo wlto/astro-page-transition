@@ -1,0 +1,162 @@
+@import 'responsive';
+
+/*
+ * This is the breakpoint where the grid
+ * will stop expanding.
+ */
+$grid-cutoff-breakpoint: $xl;
+$grid-max-width: map-get($breakpoints, $grid-cutoff-breakpoint);
+
+$grid-columns : (
+  'xs' : 4,
+  's' : 4,
+  'm' : 8,
+  'ml' : 8,
+  'l' : 12,
+  'xl' : 12,
+);
+
+$grid-margins : (
+  'xs' : px(20),
+  's' : px(20),
+  'm' : px(50),
+  'ml' : px(50),
+  'l' : px(100),
+  'xl' : px(100),
+);
+
+$grid-gutters : (
+  'xs' : px(20),
+  's' : px(20),
+  'm' : px(20),
+  'ml' : px(20),
+  'l' : px(20),
+  'xl' : px(20),
+);
+
+$grid-default-paddings : (
+  'xs' : 0,
+  's' : 0,
+  'm' : 0,
+  'ml' : 0,
+  'l' : 0,
+  'xl' : 0,
+);
+
+/*
+ * @function    : glab
+ * @description : Get Last Available Breakpoint
+ *                given a map and a target.
+ */
+@function glab($map, $target-key) {
+  $bp-key-orders : ( 'xs': 1, 's': 2, 'm': 3, 'ml': 4, 'l': 5, 'xl': 6 );
+  $map-keys: map-keys($map);
+
+  @if map-has-key($map, $target-key) {
+    @return $target-key;
+  } @else {
+    $target-key-order: map-get($bp-key-orders, $target-key);
+    @for $index from length($map-keys) through 1 {
+      $current-map-key-order: map-get($bp-key-orders, nth($map-keys, $index));
+      @if $target-key-order > $current-map-key-order {
+        @return nth($map-keys, $index);
+      }
+    }
+  }
+}
+
+/*
+ * @function    : get-one-col-width
+ * @description : Getting a width value of
+ *                one column given the breakpoint.
+ */
+@function get-one-col-width($bp-key: $s) {
+  $columns: map-get($grid-columns, $bp-key);
+  $margin: map-get($grid-margins, $bp-key);
+  $gutter: map-get($grid-gutters, $bp-key);
+  @if $bp-key == $grid-cutoff-breakpoint {
+    $marginalized-width: calc($grid-max-width - ($margin * 2));
+    $total-gutter-width: calc($gutter * ($columns - 1));
+    $one-column: calc(($marginalized-width - $total-gutter-width) / $columns);
+    @return $one-column;
+  } @else {
+    $marginalized-width: calc(100vw - ($margin * 2));
+    $total-gutter-width: calc($gutter * ($columns - 1));
+    $one-column: calc(($marginalized-width - $total-gutter-width) / $columns);
+    @return $one-column;
+  }
+}
+
+/*
+ * @function    : get-col-width
+ * @description : Getting a width value given
+ *                the breakpoint and the number
+ *                of columns.
+ */
+@function get-col-width($bp-key: $s, $n: 1) {
+  $gutter: map-get($grid-gutters, $bp-key);
+  @return calc(get-one-col-width($bp-key) * $n + ($gutter * ($n - 1)));
+}
+
+/*
+ * @mixin       : grid-row
+ * @description : Initializing a grid row with
+ *                optional side paddings.
+ */
+@mixin grid-row($paddings-map: $grid-default-paddings) {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  max-width: $grid-max-width;
+  margin: 0 auto;
+
+  @each $bp-key, $bp-value in $breakpoints {
+    $columns: map-get($grid-columns, $bp-key);
+    @if map-has-key($paddings-map, $bp-key) {
+      $paddings: map-get($paddings-map, $bp-key);
+      @include media($bp-key) {
+        width: get-col-width($bp-key, $columns);
+        padding-left: get-col-width($bp-key, $paddings);
+        padding-right: get-col-width($bp-key, $paddings);
+      }
+    } @else {
+      $last-paddings-bp: #{glab($paddings-map, $bp-key)};
+      $last-paddings-value: #{map-get($paddings-map, $last-paddings-bp)};
+      @include media($bp-key) {
+        width: get-col-width($bp-key, $columns);
+        padding-left: get-col-width($bp-key, $last-paddings-value);
+        padding-right: get-col-width($bp-key, $last-paddings-value);
+      }
+    }
+  }
+
+  @include media($ml) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+/*
+ * @mixin       : grid-column
+ * @description : Initializing a grid column given
+ *                a map of breakpoint-columns values.
+ */
+@mixin grid-column($cols-map: $grid-columns) {
+  flex-grow: 0;
+
+  @each $bp-key, $bp-value in $breakpoints {
+    @if map-has-key($cols-map, $bp-key) {
+      $columns: map-get($cols-map, $bp-key);
+      @include media($bp-key) {
+        width: get-col-width($bp-key, $columns);
+      }
+    } @else {
+      $last-cols-bp: #{glab($cols-map, $bp-key)};
+      $last-cols-value: #{map-get($cols-map, $last-cols-bp)};
+      @include media($bp-key) {
+        width: get-col-width($bp-key, $last-cols-value);
+      }
+    }
+  }
+}

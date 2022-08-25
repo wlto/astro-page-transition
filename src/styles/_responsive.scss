@@ -1,0 +1,22 @@
+$breakpoints : (
+  'xs' : 0,         // very small phone
+  's' : 375px,      // phone
+  'm' : 768px,      // large phone or tablet in portrait
+  'ml' : 1024px,    // tablet in landscape
+  'l' : 1440px,     // desktop
+  'xl' : 1920px     // large desktop
+);
+
+$xs : 'xs';
+$s  : 's';
+$m  : 'm';
+$ml : 'ml';
+$l  : 'l';
+$xl : 'xl';
+
+@mixin media($bp-key) {
+  $bp-value: map-get($breakpoints, $bp-key);
+  @media screen and (min-width: $bp-value) {
+    @content;
+  }
+}
